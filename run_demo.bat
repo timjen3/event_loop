@@ -5,4 +5,4 @@ cd %APP_DIR%
 
 :: %PYTHON_PATH% demo.py --help
 :: %PYTHON_PATH% demo.py --version
-%PYTHON_PATH% demo.py --powers 5 --runtime 130
+%PYTHON_PATH% demo.py --loops 5 --powers 4 --runtime 18 --display True
