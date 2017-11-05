@@ -14,7 +14,7 @@ def intermittent_threaded_(fun):
 
 	def wrapped_(self, *args):
 		"""executes function, waits for it to finish, and runs function again, ad-infinitum unless stopped."""
-		while not self.stopped:
+		while self.started and not self.stopped:
 			t_ = Timer(interval=self.check_interval, function=fun, args=[self, *args])
 			t_.start()
 			t_.join()
@@ -31,22 +31,19 @@ class SingleThreaded:
 
 	@classmethod
 	def shutdown(cls):
-		print("shutting down...")
 		for inst_ in cls.INSTANCES:
 			inst_.stop()
 		for inst_ in cls.INSTANCES:
-			inst_.__event_loop_.join()
+			inst_.wait()
 
-	@classmethod
-	def bootup(cls):
-		for inst_ in cls.INSTANCES:
-			inst_.__event_loop_ = inst_.__do_tasks_()
-
-	def __init__(self):
+	def __init__(self, clear_backlog=False):
 		self.started = False
 		self.stopped = False
 		self.__event_loop_ = None
 		SingleThreaded.INSTANCES.append(self)
+		if clear_backlog:
+			print("Clearing out due tasks loaded from disk.")
+			self.__do_tasks_()
 
 	"""calling start will fire off a new thread which will process all tasks every 1s unless the stop() 
 	method is called."""

@@ -3,9 +3,11 @@ SET APP_DIR=C:\Repos\event_loop
 cd %APP_DIR%
 
 :: HOW TO GET HELP AND VERSION NUMBER
-:: %PYTHON_PATH% demo.py --help
-:: %PYTHON_PATH% demo.py --version
+%PYTHON_PATH% demo.py --version
+%PYTHON_PATH% demo.py --help
 
-:: CHOOSE THE DEMO YOU WANT TO RUN. THEY ARE PRE-CONFIGURED TO BE DECENT DEMOS.
-:: %PYTHON_PATH% demo.py --tasks 500 --powers 5 --runtime 130 --demo work
-%PYTHON_PATH% demo.py --tasks 3 --runtime 20 --demo quest
+:: WORK DEMO - ie: 'MINING'
+%PYTHON_PATH% demo.py --cycles 10 --demo work
+
+:: QUEST DEMO
+%PYTHON_PATH% demo.py --cycles 3 --demo quest

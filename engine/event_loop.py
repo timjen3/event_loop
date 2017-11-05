@@ -30,7 +30,7 @@ class EventLoop(SingleThreaded):
 		self.stopped = False
 		self.__event_loop_ = None
 		self.__tasks_ = ProgressStore.list(inst=self, uid=uid, name="tasks")
-		super().__init__()
+		super().__init__(clear_backlog=True)
 
 	def __ticks_(self):
 		if self.started:
@@ -54,6 +54,7 @@ class EventLoop(SingleThreaded):
 			baked_ = [i for i, (ticks_, task_) in enumerate(self.__tasks_) if ticks_ <= now_]
 			if len(baked_) == 0:
 				break
+
 			index_ = baked_.pop(0)
 			ticks_, task_ = self.__tasks_.pop(index_)
 			task_.process(EventLoop)

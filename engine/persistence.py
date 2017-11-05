@@ -8,8 +8,8 @@ class ProgressStore:
 
 	@classmethod
 	def __get_shelf_(cls, inst, uid):
-		shelf_location_ = os.sep.join(["bin", "{}".format(inst.__class__.__name__)])
-		bin_name_ = "{}.bin".format(uid)
+		shelf_location_ = os.sep.join(["_bin", "{}".format(inst.__class__.__name__)])
+		bin_name_ = "{}._bin".format(uid)
 		full_bin_name = os.sep.join([shelf_location_, bin_name_])
 
 		# ALREADY LOADED, JUST RETURN

@@ -102,4 +102,4 @@ ENV/
 
 # other
 .idea
-bin/
+_bin/

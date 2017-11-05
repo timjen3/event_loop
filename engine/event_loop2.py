@@ -33,7 +33,7 @@ class EventLoop(SingleThreaded):
 
 	def add_task(self, task):
 		"""
-			:param task: object implementing the resources.tasks.Task() abstract class interface
+			:param task: object implementing the work.tasks.Task() abstract class interface
 		"""
 		self.__tasks_.append(task)
 
