@@ -24,10 +24,8 @@ class EventLoop(SingleThreaded):
 				should be of form (ticks, Task())
 		"""
 		self.uid = uid
-		self.THROUGHPUT = defaultdict(int)
 		self.check_interval = __DEFAULT_CHECK_INTERVAL__
 		self.stopped = False
-		self.__event_loop_ = None
 		self.__tasks_ = ProgressStore.list(inst=self, uid=uid, name="tasks")
 		super().__init__()
 

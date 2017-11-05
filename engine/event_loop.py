@@ -17,7 +17,6 @@ __DEFAULT_CHECK_INTERVAL__ = 1  # seconds between intervals
 
 class EventLoop(SingleThreaded):
 	RESOURCES = defaultdict(int)
-	ticks = floor(time())  # until start() called use startup time
 
 	def __init__(self, uid):
 		"""
@@ -25,12 +24,18 @@ class EventLoop(SingleThreaded):
 				should be of form (ticks, Task())
 		"""
 		self.uid = uid
-		self.THROUGHPUT = defaultdict(int)
 		self.check_interval = __DEFAULT_CHECK_INTERVAL__
 		self.stopped = False
-		self.__event_loop_ = None
+		self.__started_ = False
 		self.__tasks_ = ProgressStore.list(inst=self, uid=uid, name="tasks")
-		super().__init__(clear_backlog=True)
+		super().__init__()
+		print("Clearing out due tasks loaded from disk.")
+
+		# CALCULATE time() once at start, clear out overdue tasks, then switch to normal.
+		self.ticks = floor(time())
+		self.started = False
+		self.do_tasks()  # synchronous
+		self.started = True
 
 	def __ticks_(self):
 		if self.started:

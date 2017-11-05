@@ -7,5 +7,9 @@
   },
   "LEVEL3": {
     "GOLD": 15
+  },
+  "LEVEL4": {
+    "GOLD": 15,
+    "WOOD": 15
   }
 }
