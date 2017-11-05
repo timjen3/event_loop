@@ -1,23 +1,22 @@
 """
-	This event loop is oriented around tasks that will finish in a specified number of ticks.
-	This event loop is not ideal for completing piles of work with a fixed number of workers.
+	This event loop is oriented around completing piles of work with a fixed number of workers.
+	This event loop is not ideal for tasks that finish in a specified number of ticks.
 
 	Good task:
-		Sending workers on a quest.
-	Bad task:
 		Tasks you may start / stop, such as while you shift workers from one thing to another.
+	Bad task:
+		Sending workers on a quest.
 """
 from .persistence import ProgressStore
 from collections import defaultdict
 from ._utils import SingleThreaded
-from math import floor
-from time import time
 __DEFAULT_CHECK_INTERVAL__ = 1  # seconds between intervals
 
 
 class EventLoop(SingleThreaded):
 	RESOURCES = defaultdict(int)
-	ticks = floor(time())  # until start() called use startup time
+	# TODO: TASK_LIMIT SHOULD START AT 0 AND BE ADJUSTED BY USER..BUT FOR PROTOTYPING CAN START AT FIXED NUMBER
+	TASK_LIMIT = 10  # maximum number of tasks processed per increment
 
 	def __init__(self, uid):
 		"""
@@ -32,28 +31,20 @@ class EventLoop(SingleThreaded):
 		self.__tasks_ = ProgressStore.list(inst=self, uid=uid, name="tasks")
 		super().__init__()
 
-	def __ticks_(self):
-		if self.started:
-			return floor(time())
-		else:
-			return self.ticks
-
 	def add_task(self, task):
 		"""
-			:param task: object implementing the resource.quests.Task() abstract class interface
-			:param ticks: number of ticks needed in order to complete the task
+			:param task: object implementing the resources.tasks.Task() abstract class interface
 		"""
-		self.__tasks_.append(
-			(self.__ticks_() + task.ticks, task)
-		)
+		self.__tasks_.append(task)
 
 	def do_tasks(self):
 		"""Processes all tasks in queue."""
-		now_ = self.__ticks_()
+		work_ = self.TASK_LIMIT
 		while True:
-			baked_ = [i for i, (ticks_, task_) in enumerate(self.__tasks_) if ticks_ <= now_]
-			if len(baked_) == 0:
+			if len(self.__tasks_) == 0 or work_ <= 0:
 				break
-			index_ = baked_.pop(0)
-			ticks_, task_ = self.__tasks_.pop(index_)
-			task_.process(EventLoop)
+			self.__tasks_[0].work(self)
+			if self.__tasks_[0].completed:
+				self.__tasks_.pop(0)
+
+			work_ -= 1

@@ -1,0 +1,11 @@
+{
+  "LEVEL1": {
+    "GOLD": 5
+  },
+  "LEVEL2": {
+    "GOLD": 10
+  },
+  "LEVEL3": {
+    "GOLD": 15
+  }
+}
