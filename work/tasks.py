@@ -22,7 +22,7 @@ class __Task_Interface_:
 			evt_loop.RESOURCES[self.name] += self.bounty
 
 			if self.callback is not None:
-				self.callback(self, self.bounty)
+				self.callback(event_loop=evt_loop, task=self, bounty=self.bounty)
 
 
 class Mine(__Task_Interface_):

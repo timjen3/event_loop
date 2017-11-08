@@ -16,7 +16,7 @@ class __Quest_Interface_:
 			evt_loop.RESOURCES[r_] += amt_
 
 		if self.callback is not None:
-			self.callback(self, self.bounty)
+			self.callback(event_loop=evt_loop, task=self, bounty=self.bounty)
 
 
 class BasicQuest(__Quest_Interface_):

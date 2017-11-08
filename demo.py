@@ -1,7 +1,7 @@
 """Starts specified number of event loops with an arbitrary number of tasks loaded in. Processes all the tasks.
 On shutdown, persists remaining tasks."""
 from engine.event_loop2 import EventLoop as EventLoop2
-from engine.persistence import ProgressStore
+from engine.persistence import IoStore
 from engine.event_loop import EventLoop
 from quests.quests import BasicQuest
 from work.tasks import Mine
@@ -9,15 +9,22 @@ import time
 __VERSION__ = 1.0
 
 
-def dumb_callback(task, bounty):
-	result = "{}: n: {:10s} | b: {}".format(task.__class__.__name__, task.name, bounty)
+def dumb_callback(event_loop, task, bounty):
+	"""Called when a task or quest is completed."""
+	# TODO: UPDATE GUI
+	result = "{class_name}: n: {name:10s} | b: {bounty}\n\tNEW: {hoard}".format(
+		hoard=event_loop.RESOURCES,
+		class_name=task.__class__.__name__,
+		name=task.name,
+		bounty=bounty
+	)
 	print(result)
 
 
 def single_thread_quest_demo(cycles):
 	"""Quests finish at a specified time, period."""
 	thread_name = "quest"
-	el = EventLoop(uid=thread_name)
+	el = EventLoop(name=thread_name)
 	for i_ in range(0, cycles):
 		t_1 = BasicQuest(name="LEVEL1", callback=dumb_callback)
 		t_2 = BasicQuest(name="LEVEL2", callback=dumb_callback)
@@ -38,7 +45,7 @@ def single_thread_quest_demo(cycles):
 def single_thread_work_demo(cycles):
 	"""Work requires work to be applied to the tasks in order to complete."""
 	thread_name = "work"
-	el = EventLoop2(uid=thread_name)
+	el = EventLoop2(name=thread_name)
 	for i_ in range(0, cycles):
 		t_1 = Mine(name="WOOD", callback=dumb_callback)
 		t_2 = Mine(name="STONE", callback=dumb_callback)
@@ -75,5 +82,5 @@ if __name__ == "__main__":
 	}[args["demo"]](cycles=args["cycles"])
 
 	print("Flushing remaining tasks to disk.")
-	ProgressStore.sync()
+	IoStore.sync()
 	print("Flush complete.")

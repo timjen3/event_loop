@@ -3,8 +3,8 @@ SET APP_DIR=C:\Repos\event_loop
 cd %APP_DIR%
 
 :: HOW TO GET HELP AND VERSION NUMBER
-%PYTHON_PATH% demo.py --version
-%PYTHON_PATH% demo.py --help
+:: %PYTHON_PATH% demo.py --version
+:: %PYTHON_PATH% demo.py --help
 
 :: WORK DEMO - ie: 'MINING'
 %PYTHON_PATH% demo.py --cycles 10 --demo work

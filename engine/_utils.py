@@ -1,7 +1,5 @@
 from threading import Timer, Thread
 from abc import abstractmethod
-from math import floor
-from time import time
 
 
 def intermittent_threaded_(fun):
@@ -37,6 +35,10 @@ class SingleThreaded:
 		self.stopped = False
 		self.__event_loop_ = None
 		SingleThreaded.INSTANCES.append(self)
+
+	@property
+	def uid(self):
+		raise NotImplementedError("Must implement abstract method!!")
 
 	def start(self):
 		self.stopped = False

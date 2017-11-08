@@ -3,13 +3,13 @@ import gzip
 import os
 
 
-class ProgressStore:
+class IoStore:
 	__LOADED_ = dict()
 
 	@classmethod
 	def __get_shelf_(cls, inst, uid):
 		shelf_location_ = os.sep.join(["_bin", "{}".format(inst.__class__.__name__)])
-		bin_name_ = "{}._bin".format(uid)
+		bin_name_ = "{}.bin".format(uid)
 		full_bin_name = os.sep.join([shelf_location_, bin_name_])
 
 		# ALREADY LOADED, JUST RETURN
@@ -35,20 +35,22 @@ class ProgressStore:
 			with gzip.open(file_name_, "wb") as pckl_:
 				pickle.dump(shlv_, pckl_)
 
-	"""The following methods require an instance of a class (from which the __name__ is pulled to create a dir and
-	to serve as part of the unique id... a uid that will distinguish the instance from other instances, for example
-	Village1, which can be later loaded from disk in subsequent sessions... and a name for the data point being 
-	stored."""
 	@classmethod
-	def list(cls, inst, uid, name):
-		shlv_ = cls.__get_shelf_(inst=inst, uid=uid)
-		if name not in shlv_:
-			shlv_[name] = list()
-		return shlv_[name]
+	def get(cls, instance, method):
+		shlv_ = cls.__get_shelf_(inst=instance, uid=instance.uid)
+		if method.__name__ not in shlv_:
+			target_obj = method(instance)
+			shlv_[method.__name__] = target_obj
+		target_obj = method(instance)
+		from collections import defaultdict
+		# if isinstance(target_obj, defaultdict):
+		# 	print(shlv_[method.__name__])
+		return shlv_[method.__name__]
 
-	@classmethod
-	def dict(cls, inst, uid, name):
-		shlv_ = cls.__get_shelf_(inst=inst, uid=uid)
-		if name not in shlv_:
-			shlv_[name] = dict()
-		return shlv_[name]
+
+def persisted(method):
+	"""Add this decorator to a method to add persistence.
+	The type returned by the method is what will be persisted."""
+	def __target_store(s_, m_):
+		return IoStore.get(instance=s_, method=m_)
+	return lambda self, m=method: __target_store(self, m)

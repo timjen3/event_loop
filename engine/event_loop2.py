@@ -7,42 +7,54 @@
 	Bad task:
 		Sending workers on a quest.
 """
-from .persistence import ProgressStore
 from collections import defaultdict
 from ._utils import SingleThreaded
+from .persistence import persisted
 __DEFAULT_CHECK_INTERVAL__ = 1  # seconds between intervals
 
 
 class EventLoop(SingleThreaded):
-	RESOURCES = defaultdict(int)
 	# TODO: TASK_LIMIT SHOULD START AT 0 AND BE ADJUSTED BY USER..BUT FOR PROTOTYPING CAN START AT FIXED NUMBER
 	TASK_LIMIT = 10  # maximum number of tasks processed per increment
 
-	def __init__(self, uid):
+	def __init__(self, name):
 		"""
 			:param tasks: list of tasks can be passed if you want to begin with some tasks to process in place.
 				should be of form (ticks, Task())
 		"""
-		self.uid = uid
+		self.name = name
 		self.check_interval = __DEFAULT_CHECK_INTERVAL__
 		self.stopped = False
-		self.__tasks_ = ProgressStore.list(inst=self, uid=uid, name="tasks")
 		super().__init__()
+
+	@property
+	@persisted
+	def RESOURCES(self):
+		return defaultdict(int)
+
+	@property
+	@persisted
+	def tasks(self):
+		return []
+
+	@property
+	def uid(self):
+		return self.name
 
 	def add_task(self, task):
 		"""
 			:param task: object implementing the work.tasks.Task() abstract class interface
 		"""
-		self.__tasks_.append(task)
+		self.tasks.append(task)
 
 	def do_tasks(self):
 		"""Processes all tasks in queue."""
 		work_ = self.TASK_LIMIT
 		while True:
-			if len(self.__tasks_) == 0 or work_ <= 0:
+			if len(self.tasks) == 0 or work_ <= 0:
 				break
-			self.__tasks_[0].work(self)
-			if self.__tasks_[0].completed:
-				self.__tasks_.pop(0)
+			self.tasks[0].work(self)
+			if self.tasks[0].completed:
+				self.tasks.pop(0)
 
 			work_ -= 1
