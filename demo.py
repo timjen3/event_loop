@@ -1,5 +1,8 @@
-"""Starts specified number of event loops with an arbitrary number of tasks loaded in. Processes all the tasks.
-On shutdown, persists remaining tasks."""
+"""
+	DEMO OF THE TWO EVENT LOOP ENGINES.
+	Starts specified number of event loops with an arbitrary number of tasks loaded in.
+	Processes all the tasks. On shutdown, persists remaining tasks.
+"""
 from engine.event_loop2 import EventLoop as EventLoop2
 from engine.persistence import IoStore
 from engine.event_loop import EventLoop

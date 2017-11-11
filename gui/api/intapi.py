@@ -1,10 +1,14 @@
 import threading
 import cherrypy
+import logging
 import json
+logger = logging.getLogger("cherrypy.error")  # TODO: figure out how to config logger in config file
+logger.setLevel("ERROR")
 
 
 class CherryServer(object):
 	def __init__(self):
+		# TODO: start up an event loop instance and serve data to gui
 		pass
 
 	# @cherrypy.expose
