@@ -9,7 +9,7 @@ class CherryServer(object):
 
 	# @cherrypy.expose
 	# def index(self):
-	# 	return open("web/index.html").read()
+	# 	return open("app_web/index.html").read()
 
 	@cherrypy.expose
 	def getData(self):
@@ -26,7 +26,7 @@ class CherryServer(object):
 		print(data)
 
 
-def boot_server(config_file):
+def boot_backend_api(config_file):
 	server = lambda c_=config_file: cherrypy.quickstart(CherryServer(), config=c_)
 	t = threading.Thread(target=server)
 	t.daemon = True
