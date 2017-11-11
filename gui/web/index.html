@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>App Config</title>
+		<link rel="stylesheet" style="text/css" href="dev/bootstrap.css" />
+	</head>
+	<body>
+		<header style="background:#80BA5D;">
+			<h1 style="text-align:center;color:black;">Tool Configuration</h1>
+		</header>
+		<div id="formcontainer" class="container col-md-4" style="border:1px solid green;padding: 15px;background:white;">
+			<div class="col-md-4" style="text-align:center;">
+				<p style="text-align:center;"><strong>Add a new tool.</strong></p>
+				<select id="optdefault" onchange='load_form("default")'></select>
+			</div>
+			<div class="col-md-4" style="text-align:center;">
+				<p style="text-align:center;"><strong>Configure an existing tool.</strong></p>
+				<select id="optuser" onchange='load_form("user")'></select>
+			</div>
+			<!-- Add form here -->
+		<div>
+		<div id="res" class="alert"></div>
+	</body>
+</html>
