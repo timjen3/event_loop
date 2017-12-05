@@ -25,7 +25,8 @@ class Gui:
 
 	def __init__(self):
 		self.master = tkinter.Frame(self.root)
-		self.el = EventLoop(name="main")
+		self.el = EventLoop(name="quests")
+		self.el2 = EventLoop2(name="work")
 
 		self.out = tkinter.StringVar()
 		tb = tkinter.Label(self.master, textvariable=self.out).grid(row=0, column=0)
