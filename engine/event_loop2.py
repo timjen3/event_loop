@@ -46,6 +46,7 @@ class EventLoop(SingleThreaded):
 			:param task: object implementing the work.tasks.Task() abstract class interface
 		"""
 		self.tasks.append(task)
+		print("added work")
 
 	def do_tasks(self):
 		"""Processes all tasks in queue."""

@@ -56,6 +56,7 @@ class EventLoop(SingleThreaded):
 			:param task: object implementing the resource.quests.Task() abstract class interface
 			:param ticks: number of ticks needed in order to complete the task
 		"""
+		print("added quest")
 		self.quests.append(
 			(self.__ticks_() + task.ticks, task)
 		)
